@@ -1,0 +1,129 @@
+.expressionCard {
+    display: grid;
+    row-gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--third-color);
+    text-align: left;
+    width: 100%;
+    border: 1px solid var(--fourth-color);
+}
+.expression {
+    all: unset;
+    font-weight: bold;
+    font-size: 1.6rem;
+    cursor: pointer;
+    width: 100%;
+    border-block-end: 1px solid var(--fourth-color);
+    padding-block-end: 0.5rem;
+    &:hover {
+        color: var(--clickable-color);
+    }
+}
+.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+.details {
+    display: grid;
+    font-size: 1.2rem;
+    row-gap: 1.5rem;
+}
+.explication {
+    margin-block: auto;
+}
+.example {
+    font-style: italic;
+    margin-block: auto;
+    white-space: pre-wrap;
+}
+.cardInfo {
+    padding-block-start: 0.5rem;
+    border-block-start: 1px solid var(--fourth-color);
+}
+.author {
+    all: unset;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--clickable-color);
+    &:hover {
+        color: var(--button-color-hover);
+    }
+}
+.date {
+    font-weight: bold;
+    color: var(--clickable-color);
+}
+.likesSystem {
+    display: flex;
+}
+.likePart {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    min-width: 5rem;
+    min-height: 2rem;
+    padding: 0.3rem;
+    justify-content: space-around;
+    align-content: center;
+    text-decoration: none;
+    border-inline-end: 0.0625rem solid var(--fourth-color);
+    border-inline-start: 0.0625rem solid transparent;
+    border-block: 0.0625rem solid transparent;
+    color: var(--text-color);
+    &:hover {
+        border-inline-start: 0.0625rem solid var(--fourth-color);
+        border-block: 0.0625rem solid var(--fourth-color);
+        border-bottom-left-radius: 0.5rem;
+        border-top-left-radius: 0.5rem;
+    }
+}
+.likes {
+    margin-block: auto;
+    font-weight: bold;
+}
+.likePartActive {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border-start-start-radius: 0.5rem;
+    border-end-start-radius: 0.5rem;
+    svg {
+        path {
+            stroke: var(--button-text-color);
+        }
+    }
+}
+.dislikePart {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    min-width: 5rem;
+    padding: 0.3rem;
+    justify-content: space-around;
+    align-content: center;
+    text-decoration: none;
+    color: var(--text-color);
+    border-inline-end: 0.0625rem solid transparent;
+    border-block: 0.0625rem solid transparent;
+    &:hover {
+        border-inline-end: 0.0625rem solid var(--fourth-color);
+        border-block: 0.0625rem solid var(--fourth-color);
+        border-end-end-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+    }
+}
+.dislikes {
+    margin-block: auto;
+    font-weight: bold;
+}
+.dislikePartActive {
+    background-color: var(--button-color);
+    color: var(--button-text-color);
+    border-end-end-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+    svg {
+        path {
+            stroke: var(--button-text-color);
+        }
+    }
+}

@@ -1,0 +1,12 @@
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    max-height: 5rem;
+}
+.page {
+    margin-block: auto;
+    font-weight: bold;
+    span {
+        color: var(--clickable-color);
+    }
+}

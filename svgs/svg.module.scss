@@ -1,0 +1,18 @@
+.svg {
+    fill: var(--text-color);
+    &:hover {
+        fill: var(--button-color-hover);
+    }
+}
+.svgColorFill {
+    fill: var(--text-color);
+}
+.svgColorStroke {
+    stroke: var(--text-color);
+}
+.svgColorFillInverted {
+    fill: var(--primary-color);
+}
+.svgColorStrokeInverted {
+    stroke: var(--primary-color);
+}

@@ -1,0 +1,98 @@
+html {
+    height: 100%;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+* {
+    -webkit-transition: background-color 200ms ease-in, color 20ms linear;
+    -moz-transition: background-color 200ms ease-in, color 20ms linear;
+    -o-transition: background-color 200ms ease-in, color 20ms linear;
+    -ms-transition: background-color 200ms ease-in, color 20ms linear;
+    transition: background-color 200ms ease-in, color 20ms linear;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-family: "Roboto", sans-serif;
+    display: grid;
+    row-gap: 3dvh;
+    min-height: 100dvh;
+    grid-template-rows: min-content 1fr min-content;
+}
+:root {
+    --primary-color: #2e323a;
+    --secondary-color: #1f242d;
+    --third-color: #4a4f5b;
+    --fourth-color: #707580;
+
+    --text-color: #dddddd;
+    --clickable-color: #00d8ff;
+    --clickable-color-hover: #00a7cc;
+
+    --button-text-color: #ffffff;
+    --button-color: #d54751;
+    --button-color-hover: #b03035;
+
+    --highlighted-text: rgb(216, 46, 46);
+
+    // Spacing
+
+    --general-spacing: 0.5rem;
+
+    --placeholder-color: #606070;
+
+    img {
+        filter: grayscale(40%);
+    }
+}
+[data-theme="light"] {
+    --primary-color: #fafafa;
+    --secondary-color: #f0f0f0;
+    --third-color: #e0e0e0;
+    --fourth-color: #cccccc;
+
+    --text-color: #333333;
+    --clickable-color: #005f99;
+    --clickable-color-hover: #003f5f;
+
+    --button-text-color: #000000;
+    --button-color: #ff7373;
+    --button-color-hover: #ff5252;
+
+    --highlighted-text: rgb(200, 20, 20);
+
+    --placeholder-color: #a0a0a0;
+
+    img {
+        filter: grayscale(0);
+    }
+}
+.main {
+    display: grid;
+    padding-inline: 3dvw;
+    row-gap: 2dvh;
+    @media screen and (min-width: 1000px) {
+        padding-inline: 9dvw;
+        column-gap: 3dvw;
+        grid-template-columns: 1fr 30%;
+    }
+}
+section {
+    display: grid;
+    background-color: var(--secondary-color);
+    border-radius: 0.5rem;
+    padding-block: 2dvh;
+    padding-inline: 2dvw;
+    border: 1px solid var(--fourth-color);
+    align-items: center;
+}
+input,
+textarea {
+    font-size: 1.1rem;
+    font-family: "Roboto Condensed", sans-serif;
+}
