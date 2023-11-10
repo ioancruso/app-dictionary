@@ -8,11 +8,10 @@ import {Modal} from "@/components/modal/modal";
 import styles from "./page.module.scss";
 
 type RegFormProps = {
-    register: (formData: FormData, url: string | null) => Promise<{error: any}>;
-    url: string | null;
+    register: (formData: FormData) => Promise<{error: any}>;
 };
 
-export default function AuthForm({register, url}: RegFormProps) {
+export default function AuthForm({register}: RegFormProps) {
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<boolean | null>(null);
 
@@ -28,7 +27,7 @@ export default function AuthForm({register, url}: RegFormProps) {
             return;
         }
         const formData = new FormData(event.currentTarget as HTMLFormElement);
-        const {error} = await register(formData, url);
+        const {error} = await register(formData);
         if (error) {
             setMessage("A apărut o eroare");
             console.log(error);

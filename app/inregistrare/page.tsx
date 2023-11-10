@@ -9,7 +9,7 @@ import Redirect from "@/utilities/redirect/redirect";
 import RegForm from "./regForm";
 import styles from "./page.module.scss";
 
-async function register(formData: FormData, url: string | null) {
+async function register(formData: FormData) {
     "use server";
 
     const email = String(formData.get("email-register"));
@@ -17,6 +17,7 @@ async function register(formData: FormData, url: string | null) {
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+    const url = headers().get("origin");
 
     const urlRedirect = `${url}/confirmare/route`;
 
@@ -40,8 +41,6 @@ export default async function Inregistrare() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const url = headers().get("origin");
-
     const {
         data: {user},
     } = await supabase.auth.getUser();
@@ -56,7 +55,7 @@ export default async function Inregistrare() {
             {!logged ? (
                 <>
                     <h2>Înregistrează-te</h2>
-                    <RegForm register={register} url={url} />
+                    <RegForm register={register} />
                     <div className={styles.login}>
                         <h2>Ai deja cont?</h2>
                         <Button text="Loghează-te" href="/autentificare" />

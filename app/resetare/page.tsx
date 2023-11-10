@@ -1,4 +1,4 @@
-import {cookies} from "next/headers";
+import {cookies, headers} from "next/headers";
 import {redirect} from "next/navigation";
 
 import {createClient} from "@/utilities/supabase/server";
@@ -15,6 +15,8 @@ interface ResetResult {
 async function reset(formData: FormData): Promise<ResetResult> {
     "use server";
 
+    const url = headers().get("origin");
+
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
@@ -22,7 +24,7 @@ async function reset(formData: FormData): Promise<ResetResult> {
 
     try {
         await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "https://localhost:3000/schimba/route",
+            redirectTo: `${url}/schimba/route`,
         });
     } catch (error) {
         return {error: error as Error};
