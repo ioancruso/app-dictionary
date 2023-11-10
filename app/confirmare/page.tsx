@@ -8,33 +8,15 @@ import Good from "@/svgs/good";
 import styles from "./page.module.scss";
 import {redirect} from "next/navigation";
 
-interface ConfirmResult {
-    error: Error | null;
-}
-
-async function confirm(code: string): Promise<ConfirmResult> {
-    "use server";
-
-    if (code) {
-        const cookieStore = cookies();
-        const supabase = createClient(cookieStore);
-        try {
-            await supabase.auth.exchangeCodeForSession(code);
-        } catch (error) {
-            return {error: error as Error};
-        }
-    }
-    return {error: null};
-}
-
 export default async function Confirmare({
     searchParams,
 }: {
-    searchParams: {code: string};
+    searchParams: {eroare: string};
 }) {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
-    const code = searchParams.code;
+
+    const error = searchParams.eroare;
 
     const {
         data: {user},
@@ -46,19 +28,17 @@ export default async function Confirmare({
         logged = true;
     }
 
-    let error: Error | null = null;
+    console.log(logged);
 
-    if (!logged) {
-        const confirmResult = await confirm(code);
-        error = confirmResult.error;
+    if (error == "nu") {
         setTimeout(() => {
-            redirect("/autentificare");
+            redirect("/");
         }, 5000);
     }
 
     return (
         <div className={styles.confirmPage}>
-            {error || !code ? (
+            {(logged && error !== "nu") || !logged ? (
                 <div className={styles.error}>
                     <Redirect
                         path="/"
@@ -69,8 +49,8 @@ export default async function Confirmare({
             ) : (
                 <>
                     <Good />
-                    <h2>Contul tău a fost confirmat cu succes.</h2>
-                    <h3>Vei fi redirecționat către pagina de autentificare.</h3>
+                    <h2>Contul tău a fost confirmat cu succes</h2>
+                    <h3>Vei fi redirecționat către prima pagină</h3>
                 </>
             )}
         </div>

@@ -3,6 +3,9 @@ import {NextResponse, type NextRequest} from "next/server";
 
 export async function middleware(request: NextRequest) {
     // Create an unmodified response
+
+    request.headers.set("origin", request.nextUrl.origin);
+
     let response = NextResponse.next({
         request: {
             headers: request.headers,

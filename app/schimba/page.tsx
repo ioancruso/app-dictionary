@@ -2,7 +2,7 @@ import {cookies} from "next/headers";
 import {redirect} from "next/navigation";
 
 import {createClient} from "@/utilities/supabase/server";
-import ResetForm from "./resetForm";
+import ResetForm from "./changeForm";
 
 import Redirect from "@/utilities/redirect/redirect";
 
@@ -12,17 +12,17 @@ interface ResetResult {
     error: Error | null;
 }
 
-async function reset(formData: FormData): Promise<ResetResult> {
+async function change(formData: FormData): Promise<ResetResult> {
     "use server";
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
-    const email = String(formData.get("email"));
+    const password = String(formData.get("password"));
 
     try {
-        await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "https://localhost:3000/schimba",
+        await supabase.auth.updateUser({
+            password: password,
         });
     } catch (error) {
         return {error: error as Error};
@@ -30,7 +30,7 @@ async function reset(formData: FormData): Promise<ResetResult> {
     return {error: null};
 }
 
-export default async function Resetare() {
+export default async function Schimba() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
@@ -45,11 +45,11 @@ export default async function Resetare() {
     }
 
     return (
-        <div className={styles.resetPage}>
-            {!logged ? (
+        <div className={styles.changePage}>
+            {logged ? (
                 <>
-                    <h2>Resetare parolă</h2>
-                    <ResetForm reset={reset} />
+                    <h2>Schimbare parolă</h2>
+                    <ResetForm change={change} />
                 </>
             ) : (
                 <Redirect logged={logged} source="resetare parolă" path="/" />

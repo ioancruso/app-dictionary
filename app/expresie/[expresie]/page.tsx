@@ -1,10 +1,12 @@
+import React from "react";
+
 import {cookies} from "next/headers";
 import {createClient} from "@/utilities/supabase/client";
 import {createClient as createClientServer} from "@/utilities/supabase/server";
 
 import {ExpressionCard} from "@/components/expression/expression";
 import type {Expression} from "@/app/page";
-import type {isLiked} from "@/components/expression/expression";
+import {getLikeStatus} from "@/app/page";
 
 import styles from "./page.module.scss";
 
@@ -18,6 +20,9 @@ async function getDataWithLikes(
     let expressions: Expression[] = [];
     let expressionsError;
 
+    // Initialize expressionIds array outside the if-else blocks
+    let expressionIds = id ? [id] : []; // Add the provided id if it exists
+
     if (single) {
         // If an ID is provided, fetch a single expression.
         const singleResult = await supabase
@@ -29,30 +34,26 @@ async function getDataWithLikes(
         expressions = singleResult.data ? [singleResult.data] : [];
         expressionsError = singleResult.error;
     } else if (search) {
-        // If 'single' is false, fetch expressions based on the search term.
+        // Split the search term into unique words and sort by word length
         const words = Array.from(new Set(search.split(/\s+/))).sort(
             (a, b) => b.length - a.length
         );
 
         for (const word of words) {
-            // Stop if we already have 4 expressions.
+            // Stop if we already have 4 expressions
             if (expressions.length >= 4) {
                 break;
             }
 
             const remaining = 4 - expressions.length;
 
-            // Begin building the query
+            // Begin building the query excluding already fetched IDs
             let query = supabase
                 .from("expressions_view")
                 .select()
                 .ilike("expression", `%${word}%`)
+                .not("id", "in", `(${expressionIds.join(",")})`) // Exclude already fetched IDs
                 .limit(remaining);
-
-            // If 'single' is false and an ID is provided, exclude the expression with that ID.
-            if (!single && id) {
-                query = query.not("id", "eq", id);
-            }
 
             const searchResult = await query;
 
@@ -61,46 +62,17 @@ async function getDataWithLikes(
                 break;
             }
 
-            // Concatenate the results until we have 4.
+            // Concatenate the results until we have 4
             expressions = [...expressions, ...searchResult.data].slice(0, 4);
+            // Update expressionIds to include the ids of the newly fetched expressions
+            expressionIds = [
+                ...expressionIds,
+                ...searchResult.data.map((e) => e.id),
+            ];
         }
     }
 
     return expressions;
-}
-
-async function getLikeStatus(user_id: string | null, expression_id: string) {
-    const supabase = createClient();
-
-    const liked = await supabase
-        .from("likes")
-        .select()
-        .eq("user_id", user_id)
-        .eq("post_id", expression_id);
-
-    if (liked.error) {
-        console.log(liked.error);
-    }
-
-    if (liked.data && liked.data.length > 0) {
-        return "liked" as isLiked;
-    }
-
-    const disliked = await supabase
-        .from("dislikes")
-        .select()
-        .eq("user_id", user_id)
-        .eq("post_id", expression_id);
-
-    if (disliked.error) {
-        console.log(disliked.error);
-    }
-
-    if (disliked.data && disliked.data.length > 0) {
-        return "disliked" as isLiked;
-    }
-
-    return null;
 }
 
 export default async function Resetare({
@@ -163,10 +135,10 @@ export default async function Resetare({
                 <div className={styles.expressionsList}>
                     {expressionsWithLikes &&
                         expressionsWithLikes.map((expression, index) => (
-                            <>
+                            // The key should be on the fragment, not on the children inside
+                            <React.Fragment key={expression.id}>
                                 <ExpressionCard
                                     expressionData={expression}
-                                    key={expression.id}
                                     user={user}
                                     user_id={user_id}
                                 />
@@ -174,7 +146,7 @@ export default async function Resetare({
                                     expressionsWithLikes.length > 1 && (
                                         <h2>Altele asemănătoare:</h2>
                                     )}
-                            </>
+                            </React.Fragment>
                         ))}
                 </div>
             </div>

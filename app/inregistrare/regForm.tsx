@@ -8,10 +8,11 @@ import {Modal} from "@/components/modal/modal";
 import styles from "./page.module.scss";
 
 type RegFormProps = {
-    register: (formData: FormData) => Promise<{error: any}>;
+    register: (formData: FormData, url: string | null) => Promise<{error: any}>;
+    url: string | null;
 };
 
-export default function AuthForm({register}: RegFormProps) {
+export default function AuthForm({register, url}: RegFormProps) {
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<boolean | null>(null);
 
@@ -27,9 +28,10 @@ export default function AuthForm({register}: RegFormProps) {
             return;
         }
         const formData = new FormData(event.currentTarget as HTMLFormElement);
-        const {error} = await register(formData);
+        const {error} = await register(formData, url);
         if (error) {
             setMessage("A apărut o eroare");
+            console.log(error);
             setError(true);
         } else {
             setMessage("Verifică-ți email-ul pentru a confirma contul");
@@ -64,7 +66,7 @@ export default function AuthForm({register}: RegFormProps) {
                 <label htmlFor="username-id">Nume de utilizator</label>
                 <input
                     id="username-id"
-                    name="username"
+                    name="username-register"
                     type="text"
                     placeholder="Introdu numele de utilizator"
                     required
@@ -80,7 +82,7 @@ export default function AuthForm({register}: RegFormProps) {
                 <label htmlFor="email-id">Email</label>
                 <input
                     id="email-id"
-                    name="email"
+                    name="email-register"
                     type="email"
                     placeholder="Introdu adresa de email"
                     required
@@ -94,7 +96,7 @@ export default function AuthForm({register}: RegFormProps) {
                 <label htmlFor="password-id">Parolă</label>
                 <input
                     id="password-id"
-                    name="password"
+                    name="password-register"
                     type="password"
                     placeholder="Introdu parola"
                     required

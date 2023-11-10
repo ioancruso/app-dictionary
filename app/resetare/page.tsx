@@ -22,7 +22,7 @@ async function reset(formData: FormData): Promise<ResetResult> {
 
     try {
         await supabase.auth.resetPasswordForEmail(email, {
-            redirectTo: "https://localhost:3000/schimba",
+            redirectTo: "https://localhost:3000/schimba/route",
         });
     } catch (error) {
         return {error: error as Error};

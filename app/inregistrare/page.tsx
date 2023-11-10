@@ -2,25 +2,33 @@ import {Button} from "@/components/button/button";
 
 import {cookies} from "next/headers";
 import {createClient} from "@/utilities/supabase/server";
+import {headers} from "next/headers";
 
 import Redirect from "@/utilities/redirect/redirect";
 
 import RegForm from "./regForm";
 import styles from "./page.module.scss";
 
-async function register(formData: FormData) {
+async function register(formData: FormData, url: string | null) {
     "use server";
 
-    const email = String(formData.get("email"));
-    const password = String(formData.get("password"));
+    const email = String(formData.get("email-register"));
+    const password = String(formData.get("password-register"));
 
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
 
+    const urlRedirect = `${url}/confirmare/route`;
+
     const {error} = await supabase.auth.signUp({
         email,
         password,
+        options: {
+            emailRedirectTo: urlRedirect,
+        },
     });
+
+    console.log(error);
 
     if (error) {
         return {error: {message: error.message}};
@@ -31,6 +39,8 @@ async function register(formData: FormData) {
 export default async function Inregistrare() {
     const cookieStore = cookies();
     const supabase = createClient(cookieStore);
+
+    const url = headers().get("origin");
 
     const {
         data: {user},
@@ -46,7 +56,7 @@ export default async function Inregistrare() {
             {!logged ? (
                 <>
                     <h2>Înregistrează-te</h2>
-                    <RegForm register={register} />
+                    <RegForm register={register} url={url} />
                     <div className={styles.login}>
                         <h2>Ai deja cont?</h2>
                         <Button text="Loghează-te" href="/autentificare" />

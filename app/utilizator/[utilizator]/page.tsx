@@ -1,37 +1,23 @@
+import React from "react";
+
 import {cookies} from "next/headers";
 import {createClient} from "@/utilities/supabase/client";
 import {createClient as createClientServer} from "@/utilities/supabase/server";
 
 import {ExpressionCard} from "@/components/expression/expression";
-import Pagination from "@/components/pagination/pagination";
+import type {Expression} from "@/app/page";
+import {getLikeStatus} from "@/app/page";
+import {PER_PAGE} from "@/app/page";
 
-import type {isLiked} from "@/components/expression/expression";
+import styles from "./page.module.scss";
 
-import styles from "./page.module.css";
-
-export const PER_PAGE = 5;
-
-export const dynamic = "force-dynamic";
-
-export type Expression = {
-    id: number;
-    date: string;
-    expression: string;
-    explication: string;
-    example: string;
-    author: string;
-    user_id: string;
-    likes: number;
-    dislikes: number;
-    likeStatus: isLiked;
-};
-
-async function getExpressionsNumber() {
+async function getExpressionsNumber(id: string) {
     const supabase = createClient();
 
     const {data: countData, error: countError} = await supabase
-        .from("expressions_count_view")
-        .select("expressions_count");
+        .from("expressions_view")
+        .select()
+        .eq("user_id", id);
 
     if (countError) {
         console.error(countError);
@@ -43,13 +29,15 @@ async function getExpressionsNumber() {
 
 async function getDataWithLikes(
     start: number,
-    stop: number
+    stop: number,
+    id: string
 ): Promise<Expression[]> {
     const supabase = createClient();
 
     const {data: expressions, error: expressionsError} = await supabase
         .from("expressions_view")
         .select()
+        .eq("user_id", id)
         .range(start, stop)
         .order("date", {ascending: false});
 
@@ -60,50 +48,17 @@ async function getDataWithLikes(
     return expressions;
 }
 
-export async function getLikeStatus(
-    user_id: string | null,
-    expression_id: string
-) {
-    const supabase = createClient();
-
-    const liked = await supabase
-        .from("likes")
-        .select()
-        .eq("user_id", user_id)
-        .eq("post_id", expression_id);
-
-    if (liked.error) {
-        console.log(liked.error);
-    }
-
-    if (liked.data && liked.data.length > 0) {
-        return "liked" as isLiked;
-    }
-
-    const disliked = await supabase
-        .from("dislikes")
-        .select()
-        .eq("user_id", user_id)
-        .eq("post_id", expression_id);
-
-    if (disliked.error) {
-        console.log(disliked.error);
-    }
-
-    if (disliked.data && disliked.data.length > 0) {
-        return "disliked" as isLiked;
-    }
-
-    return null;
-}
-
-export default async function Home({
+export default async function Resetare({
+    params,
     searchParams,
 }: {
+    params: {id: string};
     searchParams: {pagina?: string};
 }) {
     const cookieStore = cookies();
     const supabase = createClientServer(cookieStore);
+
+    const id = params.id;
     const page = Number(searchParams.pagina ?? 1);
     const start = (page - 1) * PER_PAGE;
     const stop = start + PER_PAGE - 1;
@@ -119,7 +74,7 @@ export default async function Home({
     }
 
     try {
-        const expressionsNumber = await getExpressionsNumber();
+        const expressionsNumber = await getExpressionsNumber(id);
 
         if (expressionsNumber < 1) {
             throw Error("No expression yet");
@@ -133,7 +88,11 @@ export default async function Home({
             throw new Error("Page number cannot be less than 1");
         }
 
-        const expressions: Expression[] = await getDataWithLikes(start, stop);
+        const expressions: Expression[] = await getDataWithLikes(
+            start,
+            stop,
+            id
+        );
 
         let expressionsWithLikes = expressions;
 
@@ -154,20 +113,17 @@ export default async function Home({
             <div className={styles.container}>
                 <div className={styles.expressionsList}>
                     {expressionsWithLikes &&
-                        expressionsWithLikes.map((expression) => (
-                            <ExpressionCard
-                                expressionData={expression}
-                                key={expression.id}
-                                user={user}
-                                user_id={user_id}
-                            />
+                        expressionsWithLikes.map((expression, index) => (
+                            // The key should be on the fragment, not on the children inside
+                            <React.Fragment key={expression.id}>
+                                <ExpressionCard
+                                    expressionData={expression}
+                                    user={user}
+                                    user_id={user_id}
+                                />
+                            </React.Fragment>
                         ))}
                 </div>
-                <Pagination
-                    page={page}
-                    per_page={PER_PAGE}
-                    PostsNumber={expressionsNumber}
-                />
             </div>
         );
     } catch (error) {
