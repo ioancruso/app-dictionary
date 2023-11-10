@@ -121,7 +121,7 @@ export default async function Home({
     try {
         const expressionsNumber = await getExpressionsNumber();
 
-        if (expressionsNumber < 1) {
+        if (!expressionsNumber || expressionsNumber < 1) {
             throw Error("No expression yet");
         }
         if (page > 1) {

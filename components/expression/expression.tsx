@@ -15,8 +15,8 @@ import styles from "./expression.module.scss";
 
 interface ExpressionCardProps {
     expressionData: Expression;
-    showAuthor?: string;
-    showLikes?: string;
+    showAuthor?: boolean;
+    showLikes?: boolean;
     clickable?: boolean;
     user: any;
     user_id: string | null;
@@ -26,8 +26,8 @@ export type isLiked = "liked" | "disliked" | null;
 
 function ExpressionCard({
     expressionData,
-    showAuthor,
-    showLikes,
+    showAuthor = true,
+    showLikes = true,
     clickable,
     user,
     user_id,
@@ -195,7 +195,7 @@ function ExpressionCard({
                 </div>
                 <div className={styles.cardInfo}>
                     adăugat{" "}
-                    {showAuthor !== "false" && (
+                    {showAuthor && (
                         <>
                             de{" "}
                             <Link
@@ -212,7 +212,7 @@ function ExpressionCard({
                         {getDate(expressionData.date)}
                     </span>
                 </div>
-                {showLikes !== "false" && (
+                {showLikes && (
                     <div className={styles.likesSystem}>
                         <button
                             className={`${styles.likePart} ${

@@ -2,6 +2,10 @@
     display: grid;
     grid-template-rows: 1fr max-content;
     height: 100%;
+    h1 {
+        text-align: center;
+        margin-block-start: 0.5rem;
+    }
 }
 
 .expressionsList {

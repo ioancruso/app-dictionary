@@ -6,10 +6,28 @@ import {createClient as createClientServer} from "@/utilities/supabase/server";
 
 import {ExpressionCard} from "@/components/expression/expression";
 import type {Expression} from "@/app/page";
+import Pagination from "@/components/pagination/pagination";
 import {getLikeStatus} from "@/app/page";
 import {PER_PAGE} from "@/app/page";
 
 import styles from "./page.module.scss";
+
+async function getId(username: string) {
+    const supabase = createClient();
+
+    const {data, error} = await supabase
+        .from("view_usernames")
+        .select()
+        .ilike("username", username)
+        .single();
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    return data.id;
+}
 
 async function getExpressionsNumber(id: string) {
     const supabase = createClient();
@@ -24,7 +42,7 @@ async function getExpressionsNumber(id: string) {
         return;
     }
 
-    return countData[0].expressions_count;
+    return countData.length;
 }
 
 async function getDataWithLikes(
@@ -52,13 +70,13 @@ export default async function Resetare({
     params,
     searchParams,
 }: {
-    params: {id: string};
+    params: {utilizator: string};
     searchParams: {pagina?: string};
 }) {
     const cookieStore = cookies();
     const supabase = createClientServer(cookieStore);
 
-    const id = params.id;
+    const username = decodeURIComponent(params.utilizator);
     const page = Number(searchParams.pagina ?? 1);
     const start = (page - 1) * PER_PAGE;
     const stop = start + PER_PAGE - 1;
@@ -74,9 +92,15 @@ export default async function Resetare({
     }
 
     try {
+        const id = await getId(username);
+
+        if (typeof id !== "string" || !id) {
+            throw new Error("Invalid or empty string");
+        }
+
         const expressionsNumber = await getExpressionsNumber(id);
 
-        if (expressionsNumber < 1) {
+        if (!expressionsNumber || expressionsNumber < 1) {
             throw Error("No expression yet");
         }
         if (page > 1) {
@@ -111,19 +135,26 @@ export default async function Resetare({
 
         return (
             <div className={styles.container}>
+                <h1>Expresiile utilizatorului {username.toUpperCase()}</h1>
                 <div className={styles.expressionsList}>
                     {expressionsWithLikes &&
-                        expressionsWithLikes.map((expression, index) => (
+                        expressionsWithLikes.map((expression) => (
                             // The key should be on the fragment, not on the children inside
                             <React.Fragment key={expression.id}>
                                 <ExpressionCard
                                     expressionData={expression}
                                     user={user}
                                     user_id={user_id}
+                                    showAuthor={false}
                                 />
                             </React.Fragment>
                         ))}
                 </div>
+                <Pagination
+                    page={page}
+                    per_page={PER_PAGE}
+                    PostsNumber={expressionsNumber}
+                />
             </div>
         );
     } catch (error) {
