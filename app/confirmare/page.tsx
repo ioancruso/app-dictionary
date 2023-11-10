@@ -43,7 +43,7 @@ export default async function Confirmare({
                     <Redirect
                         error={false}
                         path="/"
-                        custom="Contul tău a fost confirmat cu succes"
+                        custom="Contul tău a fost confirmat cu succes."
                     />
                 </>
             )}
