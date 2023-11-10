@@ -28,14 +28,6 @@ export default async function Confirmare({
         logged = true;
     }
 
-    console.log(logged);
-
-    if (error == "nu") {
-        setTimeout(() => {
-            redirect("/");
-        }, 5000);
-    }
-
     return (
         <div className={styles.confirmPage}>
             {(logged && error !== "nu") || !logged ? (
