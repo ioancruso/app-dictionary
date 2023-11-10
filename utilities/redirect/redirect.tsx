@@ -4,10 +4,12 @@ import {useRouter} from "next/navigation";
 import {useEffect} from "react";
 
 import Error from "@/svgs/error";
+import Good from "@/svgs/good";
 
 import styles from "./redirect.module.scss";
 
 type RedirectProps = {
+    error?: boolean;
     logged?: boolean;
     source?: string;
     path: string;
@@ -15,6 +17,7 @@ type RedirectProps = {
 };
 
 export default function Redirect({
+    error = true,
     logged,
     source,
     path,
@@ -31,7 +34,7 @@ export default function Redirect({
 
     return (
         <div className={styles.info}>
-            <Error />
+            {error ? <Error /> : <Good />}
             {custom ? (
                 custom
             ) : (

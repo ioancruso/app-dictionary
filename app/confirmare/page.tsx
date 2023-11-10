@@ -40,9 +40,11 @@ export default async function Confirmare({
                 </div>
             ) : (
                 <>
-                    <Good />
-                    <h2>Contul tău a fost confirmat cu succes</h2>
-                    <h3>Vei fi redirecționat către prima pagină</h3>
+                    <Redirect
+                        error={false}
+                        path="/"
+                        custom="Contul tău a fost confirmat cu succes"
+                    />
                 </>
             )}
         </div>
