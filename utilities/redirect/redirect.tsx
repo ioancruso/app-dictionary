@@ -48,7 +48,10 @@ export default function Redirect({
             )}
             <span>
                 Vei fi redirecționat/ă către{" "}
-                {logged || custom ? "prima pagină" : "pagina de autentificare"}.
+                {logged || custom
+                    ? "pagina principală"
+                    : "pagina de autentificare"}
+                .
             </span>
         </div>
     );

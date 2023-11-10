@@ -12,6 +12,7 @@ import styles from "./page.module.scss";
 async function register(formData: FormData) {
     "use server";
 
+    const username = String(formData.get("username-register"));
     const email = String(formData.get("email-register"));
     const password = String(formData.get("password-register"));
 
@@ -26,10 +27,11 @@ async function register(formData: FormData) {
         password,
         options: {
             emailRedirectTo: urlRedirect,
+            data: {
+                username: username,
+            },
         },
     });
-
-    console.log(error);
 
     if (error) {
         return {error: {message: error.message}};

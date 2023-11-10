@@ -1,6 +1,7 @@
 "use client";
 
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import {useRouter} from "next/navigation";
 import dayjs from "dayjs";
 
 import {Button} from "@/components/button/button";
@@ -38,6 +39,8 @@ export default function AddForm({add, username, user_id}: AddFormProps) {
         explication: true,
         example: true,
     });
+
+    const router = useRouter();
 
     function handleKeyDown(event: React.KeyboardEvent<HTMLTextAreaElement>) {
         const name = event.currentTarget.name;
@@ -132,8 +135,15 @@ export default function AddForm({add, username, user_id}: AddFormProps) {
                 setError(true);
             } else {
                 setMessage(
-                    "Expresia a fost adăugată cu succes. Vei fi redirecționat/ă către pagina expresiei."
+                    "Expresia a fost adăugată cu succes. Vei fi redirecționat/ă către pagina principală."
                 );
+                useEffect(() => {
+                    const timer = setTimeout(() => {
+                        router.push("/");
+                    }, 5000);
+
+                    return () => clearTimeout(timer);
+                }, []);
                 setError(false);
                 // Reset form fields and errors
                 setExpression("");
