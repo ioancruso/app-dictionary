@@ -135,7 +135,10 @@ export default async function Resetare({
 
         return (
             <div className={styles.container}>
-                <h1>Expresiile utilizatorului {username.toUpperCase()}</h1>
+                <h1>
+                    Expresiile utilizatorului{" "}
+                    <span>{username.toUpperCase()}</span>
+                </h1>
                 <div className={styles.expressionsList}>
                     {expressionsWithLikes &&
                         expressionsWithLikes.map((expression) => (

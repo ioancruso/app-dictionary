@@ -132,6 +132,9 @@ export default async function Resetare({
 
         return (
             <div className={styles.container}>
+                <h1>
+                    <span>{decodedExpression}</span>
+                </h1>
                 <div className={styles.expressionsList}>
                     {expressionsWithLikes &&
                         expressionsWithLikes.map((expression, index) => (
