@@ -1,4 +1,5 @@
 import type {Metadata} from "next";
+import {Analytics} from "@vercel/analytics/react";
 import {cookies} from "next/headers";
 
 import {Header} from "@/sections/header/header";
@@ -36,6 +37,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
                     <Sidebar />
                 </main>
                 <Footer />
+                <Analytics />
             </body>
         </html>
     );
