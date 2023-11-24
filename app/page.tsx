@@ -60,10 +60,7 @@ async function getDataWithLikes(
     return expressions;
 }
 
-export async function getLikeStatus(
-    user_id: string | null,
-    expression_id: string
-) {
+async function getLikeStatus(user_id: string | null, expression_id: string) {
     const supabase = createClient();
 
     const liked = await supabase
@@ -100,11 +97,11 @@ export async function getLikeStatus(
 export default async function Home({
     searchParams,
 }: {
-    searchParams?: {pagina?: string};
+    searchParams: {pagina?: string};
 }) {
     const cookieStore = cookies();
     const supabase = createClientServer(cookieStore);
-    const page = Number(searchParams?.pagina ?? 1);
+    const page = Number(searchParams.pagina ?? 1);
     const start = (page - 1) * PER_PAGE;
     const stop = start + PER_PAGE - 1;
 
@@ -179,3 +176,5 @@ export default async function Home({
         );
     }
 }
+
+export {getLikeStatus};
