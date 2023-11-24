@@ -100,11 +100,11 @@ export async function getLikeStatus(
 export default async function Home({
     searchParams,
 }: {
-    searchParams: {pagina?: string};
+    searchParams?: {pagina?: string};
 }) {
     const cookieStore = cookies();
     const supabase = createClientServer(cookieStore);
-    const page = Number(searchParams.pagina ?? 1);
+    const page = Number(searchParams?.pagina ?? 1);
     const start = (page - 1) * PER_PAGE;
     const stop = start + PER_PAGE - 1;
 
