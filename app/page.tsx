@@ -9,9 +9,9 @@ import type {isLiked} from "@/components/expression/expression";
 
 import styles from "./page.module.css";
 
-const PER_PAGE = 5;
+export const PER_PAGE = 5;
 
-const dynamic = "force-dynamic";
+export const dynamic = "force-dynamic";
 
 export type Expression = {
     id: number;
@@ -60,7 +60,10 @@ async function getDataWithLikes(
     return expressions;
 }
 
-async function getLikeStatus(user_id: string | null, expression_id: string) {
+export async function getLikeStatus(
+    user_id: string | null,
+    expression_id: string
+) {
     const supabase = createClient();
 
     const liked = await supabase
@@ -176,5 +179,3 @@ export default async function Home({
         );
     }
 }
-
-export {getLikeStatus, PER_PAGE, dynamic};
