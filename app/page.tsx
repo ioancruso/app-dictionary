@@ -9,9 +9,9 @@ import type {isLiked} from "@/components/expression/expression";
 
 import styles from "./page.module.css";
 
-export const PER_PAGE = 5;
+const PER_PAGE = 5;
 
-export const dynamic = "force-dynamic";
+const dynamic = "force-dynamic";
 
 export type Expression = {
     id: number;
@@ -177,4 +177,4 @@ export default async function Home({
     }
 }
 
-export {getLikeStatus};
+export {getLikeStatus, PER_PAGE, dynamic};
