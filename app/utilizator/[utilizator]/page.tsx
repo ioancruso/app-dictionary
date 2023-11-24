@@ -16,7 +16,7 @@ async function getId(username: string) {
     const supabase = createClient();
 
     const {data, error} = await supabase
-        .from("view_usernames")
+        .from("users_view")
         .select()
         .ilike("username", username)
         .single();

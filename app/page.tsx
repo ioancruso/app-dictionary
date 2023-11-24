@@ -29,16 +29,16 @@ export type Expression = {
 async function getExpressionsNumber() {
     const supabase = createClient();
 
-    const {data: countData, error: countError} = await supabase
-        .from("expressions_count_view")
-        .select("expressions_count");
+    const {data, error} = await supabase
+        .from("overview")
+        .select("accepted_expressions");
 
-    if (countError) {
-        console.error(countError);
+    if (error) {
+        console.error(error);
         return;
     }
 
-    return countData[0].expressions_count;
+    return data[0].accepted_expressions;
 }
 
 async function getDataWithLikes(
